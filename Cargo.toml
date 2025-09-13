@@ -1,10 +1,14 @@
 [package]
 name = "akioi-2048"
-version = "0.4.2"
+version = "0.5.0"
 description = "A 2048 engine with multiplier tiles"
 edition = "2024"
 license = "MIT"
 readme = "README.md"
+authors = ["jasonxue <jason@xuechunxi.com>"]
+homepage = "https://github.com/jasonxue1/akioi-2048-rust"
+documentation = "https://docs.rs/akioi-2048"
+categories = ["game-engines"]
 
 [lib]
 crate-type = ["rlib"]

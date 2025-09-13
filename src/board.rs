@@ -1,10 +1,8 @@
-use pyo3::prelude::*;
-
 /// 4×4 board grid type
 pub type Board = [[i32; 4]; 4];
 
 /// Ensure all tiles on the board are valid
-pub fn validate_board(board: &Board) -> PyResult<()> {
+pub fn validate_board(board: &Board) -> Result<(), String> {
     for row in board {
         for &tile in row {
             let valid = tile == 0
@@ -12,9 +10,7 @@ pub fn validate_board(board: &Board) -> PyResult<()> {
                     && u32::try_from(tile).is_ok_and(u32::is_power_of_two))
                 || matches!(tile, -1 | -2 | -4);
             if !valid {
-                return Err(pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid tile value: {tile}"
-                )));
+                return Err(format!("invalid tile value: {tile}"));
             }
         }
     }

@@ -1,17 +1,8 @@
-use pyo3::prelude::*;
-
 mod actions;
 mod board;
 mod game;
 
 pub use crate::game::{init, step};
-
-#[pymodule]
-fn akioi_2048(_py: Python, module: &Bound<'_, PyModule>) -> PyResult<()> {
-    module.add_function(wrap_pyfunction!(step, module)?)?;
-    module.add_function(wrap_pyfunction!(init, module)?)?;
-    Ok(())
-}
 
 #[cfg(test)]
 mod tests {

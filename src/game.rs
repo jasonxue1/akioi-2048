@@ -1,5 +1,3 @@
-use pyo3::prelude::*;
-use pyo3::types::PyAny;
 use rand::prelude::IndexedRandom;
 use rand::{Rng, rng};
 
@@ -9,19 +7,15 @@ use crate::board::{Board, validate_board};
 /// Apply one move; if the board changes a new tile is spawned at random.
 ///
 /// # Errors
-/// Returns a [`PyErr`] if the board contains invalid tiles or `direction` is not in `0..=3`.
-#[pyfunction]
-pub fn step(py_board: &Bound<'_, PyAny>, direction: u8) -> PyResult<(Vec<Vec<i32>>, i32, i8)> {
-    // ① Convert Python list into a Rust board
-    let board: Board = py_board.extract()?;
-
+/// Returns an error if the board contains invalid tiles or `direction` is not in `0..=3`.
+pub fn step(board: Board, direction: u8) -> Result<(Board, i32, i8), String> {
     validate_board(&board)?;
 
     // ② Map `direction` to `Action`
     let action = IDX_TO_ACTION
         .get(direction as usize)
         .copied()
-        .ok_or_else(|| pyo3::exceptions::PyValueError::new_err("direction must be 0-3"))?;
+        .ok_or_else(|| "direction must be 0-3".to_string())?;
 
     let mut rng = rng();
 
@@ -44,22 +38,20 @@ pub fn step(py_board: &Bound<'_, PyAny>, direction: u8) -> PyResult<(Vec<Vec<i32
         0
     };
 
-    Ok((next.iter().map(|r| r.to_vec()).collect(), delta, msg))
+    Ok((next, delta, msg))
 }
 
 /// Initialize a new board with two tiles
 ///
-/// :returns: `new_board`
-///     * `new_board` `list[list[int]]` A fresh board
-#[pyfunction]
+/// :returns: A fresh 4×4 board
 #[must_use]
-pub fn init() -> Vec<Vec<i32>> {
+pub fn init() -> Board {
     let mut rng = rng();
     let mut board: Board = [[0; 4]; 4];
     spawn_tile(&mut board, &mut rng);
     spawn_tile(&mut board, &mut rng);
 
-    board.iter().map(|r| r.to_vec()).collect()
+    board
 }
 
 /// Return `(new_board, delta_score, victory?)` (no random tile spawn)

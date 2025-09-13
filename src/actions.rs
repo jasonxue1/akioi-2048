@@ -1,15 +1,23 @@
 #[derive(Clone, Copy)]
-pub enum Action {
+pub enum Direction {
     Up,
     Down,
     Left,
     Right,
 }
 
-/// Lookup table for external direction indices.
-///
-/// * `0` → **Down**  ↓
-/// * `1` → **Right** →
-/// * `2` → **Up**    ↑
-/// * `3` → **Left**  ←
-pub const IDX_TO_ACTION: [Action; 4] = [Action::Down, Action::Right, Action::Up, Action::Left];
+/// All directions in the engine’s canonical order.
+/// Order matters only for checking if any move is possible.
+pub const ALL_DIRECTIONS: [Direction; 4] = [
+    Direction::Down,
+    Direction::Right,
+    Direction::Up,
+    Direction::Left,
+];
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum State {
+    Victory,
+    GameOver,
+    Continue,
+}

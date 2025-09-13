@@ -1,26 +1,20 @@
 use rand::prelude::IndexedRandom;
 use rand::{Rng, rng};
 
-use crate::actions::{Action, IDX_TO_ACTION};
+use crate::actions::{ALL_DIRECTIONS, Direction, State};
 use crate::board::{Board, validate_board};
 
 /// Apply one move; if the board changes a new tile is spawned at random.
 ///
 /// # Errors
-/// Returns an error if the board contains invalid tiles or `direction` is not in `0..=3`.
-pub fn step(board: Board, direction: u8) -> Result<(Board, i32, i8), String> {
+/// Returns an error if the board contains invalid tiles.
+pub fn step(board: Board, direction: Direction) -> Result<(Board, i32, State), String> {
     validate_board(&board)?;
-
-    // ② Map `direction` to `Action`
-    let action = IDX_TO_ACTION
-        .get(direction as usize)
-        .copied()
-        .ok_or_else(|| "direction must be 0-3".to_string())?;
 
     let mut rng = rng();
 
     // ③ Perform one logical step
-    let (mut next, delta, victory) = single_step(&board, action);
+    let (mut next, delta, victory) = single_step(&board, direction);
 
     let moved = next != board;
     if moved {
@@ -28,17 +22,20 @@ pub fn step(board: Board, direction: u8) -> Result<(Board, i32, i8), String> {
     }
 
     // ④ Check failure (no moves in any direction)
-    let dead = (0..4).all(|d| single_step(&next, IDX_TO_ACTION[d]).0 == next);
+    let dead = ALL_DIRECTIONS
+        .iter()
+        .copied()
+        .all(|d| single_step(&next, d).0 == next);
 
-    let msg = if victory {
-        1
+    let state = if victory {
+        State::Victory
     } else if dead {
-        -1
+        State::GameOver
     } else {
-        0
+        State::Continue
     };
 
-    Ok((next, delta, msg))
+    Ok((next, delta, state))
 }
 
 /// Initialize a new board with two tiles
@@ -55,12 +52,12 @@ pub fn init() -> Board {
 }
 
 /// Return `(new_board, delta_score, victory?)` (no random tile spawn)
-fn single_step(board: &Board, action: Action) -> (Board, i32, bool) {
-    let rot = match action {
-        Action::Down => 0,  // ↓
-        Action::Up => 2,    // ↑ rotate 180°
-        Action::Left => 3,  // ← rotate -90°
-        Action::Right => 1, // → rotate +90°
+fn single_step(board: &Board, direction: Direction) -> (Board, i32, bool) {
+    let rot = match direction {
+        Direction::Down => 0,  // ↓
+        Direction::Up => 2,    // ↑ rotate 180°
+        Direction::Left => 3,  // ← rotate -90°
+        Direction::Right => 1, // → rotate +90°
     };
     let mut work = rotate(*board, rot);
 

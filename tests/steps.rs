@@ -1,9 +1,9 @@
-use akioi_2048::step;
+use akioi_2048::{Direction, step};
 
 #[test]
 fn up_number_merges_and_positive_score() {
     let board = [[4, 0, 0, 0], [4, 0, 0, 0], [2, 0, 0, 0], [2, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 2).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Up).unwrap();
     assert_eq!(new_board[0][0], 8);
     assert_eq!(new_board[1][0], 4);
     assert_eq!(delta, 12);
@@ -12,7 +12,7 @@ fn up_number_merges_and_positive_score() {
 #[test]
 fn up_multiplier_merges_and_negative_score() {
     let board = [[-2, 0, 0, 0], [-2, 0, 0, 0], [-1, 0, 0, 0], [-1, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 2).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Up).unwrap();
     assert_eq!(new_board[0][0], -4);
     assert_eq!(new_board[1][0], -2);
     assert_eq!(delta, -6);
@@ -21,7 +21,7 @@ fn up_multiplier_merges_and_negative_score() {
 #[test]
 fn up_number_multiplier_merges() {
     let board = [[-2, 0, 0, 0], [2, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 2).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Up).unwrap();
     assert_eq!(new_board[0][0], 4);
     assert_eq!(delta, 4);
 }
@@ -29,7 +29,7 @@ fn up_number_multiplier_merges() {
 #[test]
 fn up_number_and_multiplier_do_not_merge_without_tiles_above() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [-2, 0, 0, 0], [2, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 2).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Up).unwrap();
     assert_eq!(new_board[0][0], -2);
     assert_eq!(new_board[1][0], 2);
     assert_eq!(delta, 0);
@@ -38,7 +38,7 @@ fn up_number_and_multiplier_do_not_merge_without_tiles_above() {
 #[test]
 fn up_number_and_multiplier_no_merge_with_gap() {
     let board = [[16, 0, 0, 0], [0, 0, 0, 0], [-2, 0, 0, 0], [2, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 2).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Up).unwrap();
     assert_eq!(new_board[0][0], 16);
     assert_eq!(new_board[1][0], -2);
     assert_eq!(new_board[2][0], 2);
@@ -48,7 +48,7 @@ fn up_number_and_multiplier_no_merge_with_gap() {
 #[test]
 fn down_number_merges_and_positive_score() {
     let board = [[2, 0, 0, 0], [2, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[3][0], 8);
     assert_eq!(new_board[2][0], 4);
     assert_eq!(delta, 12);
@@ -57,7 +57,7 @@ fn down_number_merges_and_positive_score() {
 #[test]
 fn down_multiplier_merges_and_negative_score() {
     let board = [[-1, 0, 0, 0], [-1, 0, 0, 0], [-2, 0, 0, 0], [-2, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[3][0], -4);
     assert_eq!(new_board[2][0], -2);
     assert_eq!(delta, -6);
@@ -66,7 +66,7 @@ fn down_multiplier_merges_and_negative_score() {
 #[test]
 fn down_number_multiplier_merges() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 0, 0], [-2, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[3][0], 4);
     assert_eq!(delta, 4);
 }
@@ -74,7 +74,7 @@ fn down_number_multiplier_merges() {
 #[test]
 fn down_number_and_multiplier_do_not_merge_without_tiles_below() {
     let board = [[2, 0, 0, 0], [-2, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[2][0], 2);
     assert_eq!(new_board[3][0], -2);
     assert_eq!(delta, 0);
@@ -83,7 +83,7 @@ fn down_number_and_multiplier_do_not_merge_without_tiles_below() {
 #[test]
 fn down_number_and_multiplier_no_merge_with_gap() {
     let board = [[2, 0, 0, 0], [-2, 0, 0, 0], [0, 0, 0, 0], [16, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[1][0], 2);
     assert_eq!(new_board[2][0], -2);
     assert_eq!(new_board[3][0], 16);
@@ -93,7 +93,7 @@ fn down_number_and_multiplier_no_merge_with_gap() {
 #[test]
 fn down_move_without_merge() {
     let board = [[-1, 2, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board[3][0], -1);
     assert_eq!(new_board[3][1], 2);
     assert_eq!(delta, 0);
@@ -102,7 +102,7 @@ fn down_move_without_merge() {
 #[test]
 fn no_merge_for_negative_four() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [-4, 0, 0, 0], [-4, 0, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 0).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Down).unwrap();
     assert_eq!(new_board, board);
     assert_eq!(delta, 0);
 }
@@ -110,7 +110,7 @@ fn no_merge_for_negative_four() {
 #[test]
 fn left_number_merges_and_positive_score() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [4, 4, 2, 2]];
-    let (new_board, delta, _msg) = step(board, 3).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Left).unwrap();
     assert_eq!(new_board[3][0], 8);
     assert_eq!(new_board[3][1], 4);
     assert_eq!(delta, 12);
@@ -119,7 +119,7 @@ fn left_number_merges_and_positive_score() {
 #[test]
 fn left_multiplier_merges_and_negative_score() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [-2, -2, -1, -1]];
-    let (new_board, delta, _msg) = step(board, 3).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Left).unwrap();
     assert_eq!(new_board[3][0], -4);
     assert_eq!(new_board[3][1], -2);
     assert_eq!(delta, -6);
@@ -128,7 +128,7 @@ fn left_multiplier_merges_and_negative_score() {
 #[test]
 fn left_number_multiplier_merges() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [-2, 2, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 3).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Left).unwrap();
     assert_eq!(new_board[3][0], 4);
     assert_eq!(delta, 4);
 }
@@ -136,7 +136,7 @@ fn left_number_multiplier_merges() {
 #[test]
 fn left_number_and_multiplier_do_not_merge_without_tiles_left() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, -2, 2, 0]];
-    let (new_board, delta, _msg) = step(board, 3).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Left).unwrap();
     assert_eq!(new_board[3][0], -2);
     assert_eq!(new_board[3][1], 2);
     assert_eq!(delta, 0);
@@ -145,7 +145,7 @@ fn left_number_and_multiplier_do_not_merge_without_tiles_left() {
 #[test]
 fn left_number_and_multiplier_no_merge_with_gap() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [16, 0, -2, 2]];
-    let (new_board, delta, _msg) = step(board, 3).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Left).unwrap();
     assert_eq!(new_board[3][0], 16);
     assert_eq!(new_board[3][1], -2);
     assert_eq!(new_board[3][2], 2);
@@ -155,7 +155,7 @@ fn left_number_and_multiplier_no_merge_with_gap() {
 #[test]
 fn right_number_merges_and_positive_score() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 2, 4, 4]];
-    let (new_board, delta, _msg) = step(board, 1).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Right).unwrap();
     assert_eq!(new_board[3][3], 8);
     assert_eq!(new_board[3][2], 4);
     assert_eq!(delta, 12);
@@ -164,7 +164,7 @@ fn right_number_merges_and_positive_score() {
 #[test]
 fn right_multiplier_merges_and_negative_score() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [-1, -1, -2, -2]];
-    let (new_board, delta, _msg) = step(board, 1).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Right).unwrap();
     assert_eq!(new_board[3][3], -4);
     assert_eq!(new_board[3][2], -2);
     assert_eq!(delta, -6);
@@ -173,7 +173,7 @@ fn right_multiplier_merges_and_negative_score() {
 #[test]
 fn right_number_multiplier_merges() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 2, -2]];
-    let (new_board, delta, _msg) = step(board, 1).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Right).unwrap();
     assert_eq!(new_board[3][3], 4);
     assert_eq!(delta, 4);
 }
@@ -181,7 +181,7 @@ fn right_number_multiplier_merges() {
 #[test]
 fn right_number_and_multiplier_do_not_merge_without_tiles_right() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, -2, 0, 0]];
-    let (new_board, delta, _msg) = step(board, 1).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Right).unwrap();
     assert_eq!(new_board[3][2], 2);
     assert_eq!(new_board[3][3], -2);
     assert_eq!(delta, 0);
@@ -190,7 +190,7 @@ fn right_number_and_multiplier_do_not_merge_without_tiles_right() {
 #[test]
 fn right_number_and_multiplier_no_merge_with_gap() {
     let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, -2, 0, 16]];
-    let (new_board, delta, _msg) = step(board, 1).unwrap();
+    let (new_board, delta, _msg) = step(board, Direction::Right).unwrap();
     assert_eq!(new_board[3][1], 2);
     assert_eq!(new_board[3][2], -2);
     assert_eq!(new_board[3][3], 16);

@@ -1,4 +1,4 @@
-use akioi_2048::{init, step};
+use akioi_2048::{Direction, State, init, step};
 
 #[test]
 fn init_board_has_two_tiles() {
@@ -15,8 +15,11 @@ fn init_board_has_two_tiles() {
 #[test]
 fn step_smoke() {
     let board = init();
-    let (new_board, _delta, msg) = step(board, 0).expect("step should succeed");
+    let (new_board, _delta, msg) = step(board, Direction::Down).expect("step should succeed");
     assert_eq!(new_board.len(), 4);
     assert!(new_board.iter().all(|r| r.len() == 4));
-    assert!(matches!(msg, -1..=1));
+    assert!(matches!(
+        msg,
+        State::Victory | State::GameOver | State::Continue
+    ));
 }

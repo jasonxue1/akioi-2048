@@ -2,6 +2,7 @@ mod actions;
 mod board;
 mod game;
 
+pub use crate::actions::{Direction, State};
 pub use crate::game::{init, step};
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 [package]
 name = "akioi-2048"
-version = "0.4.1"
+version = "0.4.2"
 description = "A 2048 engine with multiplier tiles"
 edition = "2024"
 license = "MIT"

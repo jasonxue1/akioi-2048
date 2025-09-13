@@ -11,22 +11,26 @@ Pure Rust 2048 engine with multiplier tiles and score tracking.
 
 ## Rust API
 
-- `init() -> [[i32; 4]; 4]` - Create a new 4x4 board with two starting tiles.
-- `step(board: [[i32; 4]; 4], dir: u8) -> Result<([[i32; 4]; 4], i32, i8), String>`
-  Apply a move. On success returns `(new_board, delta_score, state)`
-  where `state` is `1` for victory, `-1` for game over, `0` to continue.
+### `init() -> [[i32; 4]; 4]`
 
-Direction indices: `0`=Down, `1`=Right, `2`=Up, `3`=Left.
+Create a new 4x4 board with two starting tiles.
+
+### `step(board: [[i32; 4]; 4], dir: Direction) -> Result<([[i32; 4]; 4], i32, State), String>`
+
+- Apply a move.
+- On success returns `(new_board, delta_score, state)`
+- `state` is an enum: `State::{Victory, GameOver, Continue}`.
+- Use `Direction::{Up,Down,Left,Right}` for `dir`.
 
 ### Example
 
 ```rust
-use akioi_2048::{init, step};
+use akioi_2048::{init, step, Direction, State};
 
 fn main() {
     let board = init();
-    let (next, delta, state) = step(board, 0).unwrap();
-    println!("delta={delta}, state={state}, next={next:?}");
+    let (next, delta, state) = step(board, Direction::Down).unwrap();
+    println!("delta={delta}, state={state:?}, next={next:?}");
 }
 ```
 

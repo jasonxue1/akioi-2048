@@ -1,56 +1,56 @@
 name: CI
 
 on:
-    push:
-        branches: [main]
-    pull_request:
+  push:
+    branches: [main]
+  pull_request:
 
 concurrency:
-    group: ci-${{ github.ref }}
-    cancel-in-progress: true
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    mado:
-        name: Mado (Docs/MD Check)
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - name: Mado check
-              uses: akiomik/mado@v0.3.0
+  mado:
+    name: Mado (Docs/MD Check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mado check
+        uses: akiomik/mado@v0.3.0
 
-    taplo:
-        name: Taplo (Toml Check)
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - name: Install taplo
-              run: npm install -g @taplo/cli
-            - name: Taplo check
-              run: |
-                  taplo fmt --check
-                  taplo lint --default-schema-catalogs
-                  taplo check --default-schema-catalogs
+  taplo:
+    name: Taplo (Toml Check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install taplo
+        run: npm install -g @taplo/cli
+      - name: Taplo check
+        run: |
+          taplo fmt --check
+          taplo lint --default-schema-catalogs
+          taplo check --default-schema-catalogs
 
-    clippy:
-        name: Cargo clippy (Rust Lint)
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: dtolnay/rust-toolchain@stable
-              with:
-                  components: clippy, rustfmt
-            - name: Run clippy
-              run: |
-                  cargo check
-                  cargo clippy
-            - name: Rustfmt check
-              run: cargo fmt --all -- --check
+  clippy:
+    name: Cargo clippy (Rust Lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Run clippy
+        run: |
+          cargo check
+          cargo clippy
+      - name: Rustfmt check
+        run: cargo fmt --all -- --check
 
-    test:
-        name: Cargo test
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: dtolnay/rust-toolchain@stable
-            - name: Run tests
-              run: cargo test --all --all-features --workspace
+  test:
+    name: Cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run tests
+        run: cargo test --all --all-features --workspace
